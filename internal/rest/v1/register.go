@@ -3,7 +3,7 @@ package v1
 import (
 	"net/http"
 
-	"github.com/chriss-de/ssshare/internal/rest/v1/handlers"
+	//"github.com/chriss-de/ssshare/internal/rest/v1/handlers"
 
 	"github.com/chriss-de/grouter/v1"
 )
@@ -13,8 +13,6 @@ import (
 func RegisterEndpoints(r *grouter.Router) {
 	//r.AddMiddlewares(setContentType)
 
-	r.Get("/s/{groupID}/{shareID}").DoFunc(handlers.GetFile)
-	r.Get("/s/{groupID}/{shareID}/").DoFunc(handlers.GetFile)
 	// .With(httpin.NewInput(model.XXQueryParams{}))
 
 }

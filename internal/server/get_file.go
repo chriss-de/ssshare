@@ -1,4 +1,4 @@
-package handlers
+package server
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ import (
 	dl "github.com/chriss-de/httpdirfs/dirlist"
 )
 
-func GetFile(w http.ResponseWriter, r *http.Request) {
+func getFile(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var groupID = r.PathValue("groupID")
 	var shareID = r.PathValue("shareID")
@@ -65,7 +65,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		http.StripPrefix(fmt.Sprintf("/s/%s/%s", groupID, shareID), http.FileServer(hdfs)).ServeHTTP(w, r)
+		http.StripPrefix(fmt.Sprintf("%s/%s/%s", urlPathSharePrefix, groupID, shareID), http.FileServer(hdfs)).ServeHTTP(w, r)
 	}
 
 }

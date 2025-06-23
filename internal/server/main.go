@@ -1,9 +1,10 @@
 package server
 
 import (
+	"fmt"
+	"github.com/chriss-de/ssshare/internal/helpers"
 	"log/slog"
 	"net/http"
-	"os"
 	"sync"
 
 	localMiddleware "github.com/chriss-de/ssshare/internal/middleware"
@@ -15,8 +16,9 @@ import (
 )
 
 var (
-	singletonOnce sync.Once
-	httpServer    *http.Server
+	singletonOnce      sync.Once
+	httpServer         *http.Server
+	urlPathSharePrefix = "/s"
 )
 
 func Initialize() (err error) {
@@ -34,8 +36,11 @@ func Initialize() (err error) {
 			writer.WriteHeader(http.StatusOK)
 		})
 
+		router.Get(fmt.Sprintf("%s/{groupID}/{shareID}", urlPathSharePrefix)).DoFunc(getFile)
+		router.Get(fmt.Sprintf("%s/{groupID}/{shareID}/", urlPathSharePrefix)).DoFunc(getFile)
+
 		// REST API
-		restV1.RegisterEndpoints(router.AddSubRouter("/"))
+		restV1.RegisterEndpoints(router.AddSubRouter("/api/v1"))
 
 		// start http server
 		httpServer = &http.Server{
@@ -47,8 +52,7 @@ func Initialize() (err error) {
 		go func() {
 			slog.Info("now handling requests", "listen_addr", httpServer.Addr)
 			if err = httpServer.ListenAndServe(); err != nil {
-				slog.Error("server", "error", err.Error())
-				os.Exit(1)
+				helpers.FatalError("server", "error", err.Error())
 			}
 		}()
 	})
