@@ -8,11 +8,11 @@ NAME=$(CURRENT_DIR)
 
 all: build
 
-build: vendor embedded swagger-docs
+build: vendor swagger-docs
 	mkdir -p out/bin
 	CGO_ENABLED=0 go build -o out/bin/$(NAME) .
 
-run: vendor embedded swagger-docs
+run: vendor swagger-docs
 	go run .
 
 swagger-docs:
