@@ -35,7 +35,7 @@ func (b *Backend) loadShares() (err error) {
 
 	var yamlFile []byte
 
-	if yamlFile, err = os.ReadFile("./data/shares.yml"); err != nil {
+	if yamlFile, err = os.ReadFile(b.sharesPath); err != nil {
 		return err
 	}
 	if err = yaml.Unmarshal(yamlFile, b); err != nil {

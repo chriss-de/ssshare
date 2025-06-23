@@ -4,15 +4,19 @@ MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_DIR := $(notdir $(patsubst %/,%,$(dir $(MAKEFILE_PATH))))
 NAME=$(CURRENT_DIR)
 
-.PHONY: build run swagger-docs docker-image vendor clean
+.PHONY: gomod build run swagger-docs docker-image clean
 
 all: build
 
-build: vendor swagger-docs
+gomod:
+	go mod tidy
+	go mod vendor
+
+build: gomod swagger-docs
 	mkdir -p out/bin
 	CGO_ENABLED=0 go build -o out/bin/$(NAME) .
 
-run: vendor swagger-docs
+run: gomod swagger-docs
 	go run .
 
 swagger-docs:
@@ -20,9 +24,6 @@ swagger-docs:
 
 docker-image:
 	buildah bud -f Dockerfile .
-
-vendor:
-	go mod vendor
 
 clean:
 	rm -fr out
