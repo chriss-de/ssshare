@@ -12,7 +12,7 @@ type H map[string]any
 func convertError(data any) any {
 	if data != nil {
 		if dataErr, ok := data.(error); ok {
-			return H{"error": dataErr}
+			return H{"error": dataErr.Error()}
 		}
 	}
 	return data

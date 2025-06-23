@@ -2,9 +2,11 @@ package backend
 
 import (
 	"errors"
-	"github.com/chriss-de/ssshare/internal/backend/file"
-	"github.com/spf13/viper"
 	"sync"
+
+	"github.com/chriss-de/ssshare/internal/backend/file"
+
+	"github.com/spf13/viper"
 )
 
 var singletonOnce sync.Once

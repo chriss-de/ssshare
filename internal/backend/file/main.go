@@ -2,12 +2,13 @@ package file
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"log/slog"
 	"os"
 	"path"
+	"slices"
 	"sync"
 
+	"github.com/spf13/viper"
 	"gopkg.in/yaml.v3"
 )
 
@@ -42,6 +43,25 @@ func (b *Backend) loadShares() (err error) {
 		return err
 	}
 
+	var groupsToDelete = make(map[string]struct{})
+	b.Groups = slices.DeleteFunc(b.Groups, func(g group) bool {
+		if _, ok := groupsToDelete[g.ID]; ok {
+			return true
+		} else {
+			groupsToDelete[g.ID] = struct{}{}
+			return false
+		}
+	})
+	var sharesToDelete = make(map[string]struct{})
+	b.Shares = slices.DeleteFunc(b.Shares, func(s share) bool {
+		if _, ok := sharesToDelete[s.ShareID]; ok {
+			return true
+		} else {
+			sharesToDelete[s.ShareID] = struct{}{}
+			return false
+		}
+	})
+
 	// cache to map
 	shares = make(map[string]int)
 	groups = make(map[string]int)
@@ -51,6 +71,7 @@ func (b *Backend) loadShares() (err error) {
 	}
 	for idx, s := range b.Shares {
 		shares[s.ShareID] = idx
+
 	}
 
 	slog.Info("backend shares loaded", slog.Int("shares", len(shares)), slog.Int("groups", len(groups)))

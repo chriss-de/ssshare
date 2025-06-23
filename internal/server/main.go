@@ -2,12 +2,13 @@ package server
 
 import (
 	"fmt"
-	"github.com/chriss-de/ssshare/internal/helpers"
+	"os"
+
 	"log/slog"
 	"net/http"
 	"sync"
 
-	localMiddleware "github.com/chriss-de/ssshare/internal/middleware"
+	"github.com/chriss-de/ssshare/internal/helpers"
 	restV1 "github.com/chriss-de/ssshare/internal/rest/v1"
 
 	"github.com/chriss-de/grouter/v1"
@@ -28,7 +29,7 @@ func Initialize() (err error) {
 		router := grouter.NewRouter(viper.GetString("server.baseUrl"),
 			middlewares.RealIP,
 			middlewares.Logging,
-			localMiddleware.Recovery,
+			//localMiddleware.Recovery,
 		)
 
 		// healthz
@@ -44,8 +45,9 @@ func Initialize() (err error) {
 
 		// start http server
 		httpServer = &http.Server{
+			ErrorLog:       slog.NewLogLogger(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{}), slog.LevelError),
 			Addr:           ":8080",
-			Handler:        router.GetServeMux(),
+			Handler:        router,
 			MaxHeaderBytes: 1 << 20, // 1 MB
 		}
 

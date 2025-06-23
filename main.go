@@ -3,14 +3,16 @@ package main
 import (
 	"errors"
 	"flag"
-	"github.com/chriss-de/ssshare/internal/backend"
-	"github.com/chriss-de/ssshare/internal/helpers"
-	"github.com/chriss-de/ssshare/internal/server"
-	"github.com/spf13/viper"
 	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/chriss-de/ssshare/internal/backend"
+	"github.com/chriss-de/ssshare/internal/helpers"
+	"github.com/chriss-de/ssshare/internal/server"
+
+	"github.com/spf13/viper"
 )
 
 func main() {
