@@ -34,7 +34,7 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 	var fd *os.File
 	var fdStat os.FileInfo
 
-	if fd, err = os.OpenFile(filepath, os.O_RDONLY, 0666); err != nil {
+	if fd, err = os.Open(filepath); err != nil {
 		if _, iErr := helpers.WriteJSON(w, http.StatusInternalServerError, err); iErr != nil {
 			slog.ErrorContext(r.Context(), "error writing response", "error", iErr, "original_error", err)
 		}

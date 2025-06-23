@@ -2,6 +2,8 @@ package file
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
+	"log/slog"
 	"os"
 	"path"
 	"sync"
@@ -15,10 +17,9 @@ var singletonOnce sync.Once
 var backend *Backend
 var backendLock sync.RWMutex
 
-// TODO: take filepath
 func Initialize() (_ *Backend, err error) {
 	singletonOnce.Do(func() {
-		backend = &Backend{}
+		backend = &Backend{sharesPath: viper.GetString("shares_backend.file.file")}
 		if err = backend.loadShares(); err != nil {
 			return
 		}
@@ -52,6 +53,7 @@ func (b *Backend) loadShares() (err error) {
 		shares[s.ShareID] = idx
 	}
 
+	slog.Info("backend shares loaded", slog.Int("shares", len(shares)), slog.Int("groups", len(groups)))
 	return nil
 }
 

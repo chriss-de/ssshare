@@ -1,8 +1,9 @@
 package file
 
 type Backend struct {
-	Groups []group `json:"groups"`
-	Shares []share `json:"shares"`
+	sharesPath string
+	Groups     []group `json:"groups"`
+	Shares     []share `json:"shares"`
 }
 
 type group struct {
