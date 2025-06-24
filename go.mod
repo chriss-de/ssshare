@@ -6,6 +6,8 @@ require (
 	github.com/chriss-de/grouter v1.3.0
 	github.com/chriss-de/httpdirfs v1.4.0
 	github.com/chriss-de/mux-middlewares v0.1.3
+	github.com/ggicci/httpin v0.20.0
+	github.com/rs/cors v1.11.1
 	github.com/spf13/viper v1.20.1
 	github.com/swaggo/swag v1.16.4
 	gopkg.in/yaml.v3 v3.0.1
@@ -14,6 +16,7 @@ require (
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
+	github.com/ggicci/owl v0.8.2 // indirect
 	github.com/go-openapi/jsonpointer v0.21.1 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect

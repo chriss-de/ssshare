@@ -45,3 +45,37 @@ func WriteData(w http.ResponseWriter, status int, contentType string, data []byt
 	}
 	return 0, nil
 }
+
+// GetScheme determinate http scheme from connection
+func GetScheme(r *http.Request) string {
+	if r.Header.Get("x-forwarded-proto") != "" {
+		return r.Header.Get("x-forwarded-proto")
+	}
+	if r.URL.Scheme != "" {
+		return r.URL.Scheme
+	}
+	if r.TLS != nil {
+		return "https"
+	}
+	return "http" // "best" guess
+}
+
+// GetHost determinate http host from connection
+func GetHost(r *http.Request) string {
+	var (
+		host = "127.0.0.1"
+	)
+	switch {
+	case r.Header.Get("host") != "":
+		host = r.Header.Get("host")
+	case r.Header.Get("x-forwarded-host") != "":
+		host = r.Header.Get("x-forwarded-host")
+	case r.URL.Host != "":
+		host = r.URL.Host
+	case r.Host != "":
+		host = r.Host
+	default:
+		host = "127.0.0.1"
+	}
+	return host
+}

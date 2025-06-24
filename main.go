@@ -49,11 +49,21 @@ func initializeConfig() error {
 	viper.SetEnvPrefix("SSSHARE")
 
 	viper.SetDefault("verbose", "2")
-	viper.SetDefault("server.listen_addr", ":8080")
-	viper.SetDefault("server.baseUrl", "/")
-	viper.SetDefault("server.maxHeaderSize", "1mb")
-	viper.SetDefault("server.maxBytesReader", 1048576)
 
+	viper.SetDefault("server.listen_addr", ":8080")
+	viper.SetDefault("server.base_url", "/")
+	viper.SetDefault("server.max_header_size", "1mb")
+	viper.SetDefault("server.max_bytes_reader", 1048576)
+
+	viper.SetDefault("server.cors.allowed_origins", []string{"*"})
+	viper.SetDefault("server.cors.allowed_methods", []string{"*"})
+	viper.SetDefault("server.cors.allowed_headers", []string{"*"})
+	viper.SetDefault("server.cors.exposed_headers", []string{"*"})
+	viper.SetDefault("server.cors.max_age", 300)
+	viper.SetDefault("server.cors.allow_credentials", true)
+	viper.SetDefault("server.cors.debug", false)
+
+	viper.SetDefault("shares.url_path_prefix", "/s")
 	viper.SetDefault("shares.backend", "file")
 	viper.SetDefault("shares_backend.file.file", "shares.yaml")
 

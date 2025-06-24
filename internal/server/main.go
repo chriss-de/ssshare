@@ -2,10 +2,9 @@ package server
 
 import (
 	"fmt"
-	"os"
-
 	"log/slog"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/chriss-de/ssshare/internal/helpers"
@@ -17,16 +16,15 @@ import (
 )
 
 var (
-	singletonOnce      sync.Once
-	httpServer         *http.Server
-	urlPathSharePrefix = "/s"
+	singletonOnce sync.Once
+	httpServer    *http.Server
 )
 
 func Initialize() (err error) {
 	singletonOnce.Do(func() {
 
 		// http router
-		router := grouter.NewRouter(viper.GetString("server.baseUrl"),
+		router := grouter.NewRouter(viper.GetString("server.base_url"),
 			middlewares.RealIP,
 			middlewares.Logging,
 			//localMiddleware.Recovery,
@@ -37,8 +35,11 @@ func Initialize() (err error) {
 			writer.WriteHeader(http.StatusOK)
 		})
 
-		router.Get(fmt.Sprintf("%s/{groupID}/{shareID}", urlPathSharePrefix)).DoFunc(getFile)
-		router.Get(fmt.Sprintf("%s/{groupID}/{shareID}/", urlPathSharePrefix)).DoFunc(getFile)
+		//router.Get("{$}").DoFunc(func(writer http.ResponseWriter, request *http.Request) {
+		//	slog.Info("TEST")
+		//})
+		router.Get(fmt.Sprintf("%s/{groupID}/{shareID}", viper.GetString("shares.url_path_prefix"))).DoFunc(getFile)
+		router.Get(fmt.Sprintf("%s/{groupID}/{shareID}/", viper.GetString("shares.url_path_prefix"))).DoFunc(getFile)
 
 		// REST API
 		restV1.RegisterEndpoints(router.AddSubRouter("/api/v1"))
@@ -46,7 +47,7 @@ func Initialize() (err error) {
 		// start http server
 		httpServer = &http.Server{
 			ErrorLog:       slog.NewLogLogger(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{}), slog.LevelError),
-			Addr:           ":8080",
+			Addr:           viper.GetString("server.listen_addr"),
 			Handler:        router,
 			MaxHeaderBytes: 1 << 20, // 1 MB
 		}

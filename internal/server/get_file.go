@@ -13,6 +13,7 @@ import (
 
 	"github.com/chriss-de/httpdirfs"
 	dl "github.com/chriss-de/httpdirfs/dirlist"
+	"github.com/spf13/viper"
 )
 
 func getFile(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +66,7 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		http.StripPrefix(fmt.Sprintf("%s/%s/%s", urlPathSharePrefix, groupID, shareID), http.FileServer(hdfs)).ServeHTTP(w, r)
+		http.StripPrefix(fmt.Sprintf("%s/%s/%s", viper.GetString("shares.url_path_prefix"), groupID, shareID), http.FileServer(hdfs)).ServeHTTP(w, r)
 	}
 
 }
